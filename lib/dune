@@ -1,0 +1,33 @@
+(library
+ (name ocaml_ctypes_example)
+ (install_c_headers foo)
+ (foreign_archives foo)
+ (flags (:standard -w -9-27))
+ (ctypes
+  (external_library_name foo)
+  (deps foo.h dllfoo.so libfoo.a)
+  (build_flags_resolver
+    (vendored
+      (c_flags ("-Ilib" "-I."))))
+    (headers (include "foo.h"))
+    (type_description
+      (instance Type)
+      (functor Type_description))
+    (function_description
+      (concurrency unlocked)
+      (instance Function)
+      (functor Function_description))
+      (generated_types Types_generated)
+      (generated_entry_point C)))
+
+(data_only_dirs libfoo)
+
+(rule
+  (deps (source_tree libfoo))
+  (targets libfoo.a dllfoo.so foo.h)
+  (action (no-infer
+          (progn (chdir libfoo
+                        (progn (run make all)))
+                 (copy libfoo/libfoo.a libfoo.a)
+                 (copy libfoo/libfoo.so dllfoo.so)
+                 (copy libfoo/foo.h foo.h)))))

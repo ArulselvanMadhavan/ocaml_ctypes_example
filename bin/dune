@@ -1,0 +1,4 @@
+(executable
+ (public_name ocaml_ctypes_example)
+ (name main)
+ (libraries ocaml_ctypes_example))
